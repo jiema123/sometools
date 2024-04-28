@@ -1,0 +1,4 @@
+lxml
+Flask
+selenium
+requests
