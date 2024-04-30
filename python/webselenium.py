@@ -41,22 +41,32 @@ def webcut():
             if (driver_webcut == None or service_webcut == None):
                 chrome_options = Options()
                 chrome_options.add_argument("--headless")  # 无头模式，不打开浏览器界面
-                chrome_options.add_argument("--disable-gpu")  # 禁用 GPU 加速
-                chrome_options.add_argument("--disable-dev-shm-usage")  # 禁用 GPU 加速
+                chrome_options.add_argument("--disable-gpu")
+                chrome_options.add_argument("--no-sandbox")
+                chrome_options.add_argument('--ignore-certificate-errors')
+                chrome_options.add_argument("--window-size=1280,720")
                 service_webcut = webdriver.chrome.service.Service(executable_path=chromediver_path)
                 driver_webcut = webdriver.Chrome(service=service_webcut, options=chrome_options)
             driver_webcut.get(url)
-            # 调整浏览器缩放比例为更高值，例如200%
-            driver_webcut.execute_script("document.body.style.zoom = '4';")
-            driver_webcut.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            WebDriverWait(driver_webcut, 10).until(
-                lambda driver_webcut: driver_webcut.execute_script("return document.readyState") == "complete"
-            )
-            # 使用 JavaScript 获取页面的实际宽度和高度
-            page_width = driver_webcut.execute_script("return document.body.scrollWidth") * 4
-            page_height = driver_webcut.execute_script("return document.body.scrollHeight") * 4
 
+            WebDriverWait(driver_webcut, 10).until(
+                lambda driver_webcut: driver_webcut.execute_script("return document.readyState;") == "complete"
+            )
+            driver_webcut.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            # 使用 JavaScript 获取页面的实际宽度和高度
+            page_width = driver_webcut.execute_script("return document.body.scrollWidth;")
+            page_height = driver_webcut.execute_script("return document.body.scrollHeight;")
+
+            if (page_width < 600):
+                zoom_time = 4
+            else:
+                zoom_time = 1
+
+            page_width = page_width * zoom_time
+            page_height = page_height * zoom_time
             # 设置浏览器窗口大小为页面的实际宽度和高度
+
+            driver_webcut.execute_script("document.body.style.zoom = '" + str(zoom_time) + "';")
             driver_webcut.set_window_size(page_width, page_height)
             new_uuid = str(uuid.uuid4())
             filepath = screenshot_dir + f"screenshot_{new_uuid}.png"
@@ -66,7 +76,7 @@ def webcut():
             logging.error(f'Error in webcut: {url} exception:{e}')
 
 
-        return jsonify({'status': 'ok', 'file': filepath})
+        return jsonify({'status': 'ok', 'file': filepath, 'file_size': os.path.getsize(filepath), 'resolution': str(page_width) + "x" + str(page_height)})
 
 @app.route('/detail', methods=['GET'])
 def detail():
@@ -148,12 +158,12 @@ def search():
     token = content['data']['param'];
     logging.debug(f'[Token]: {token}')
     headers = {
-	    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
 
     # 构建搜索接口URL
     search_url = f'https://mp.weixin.qq.com/cgi-bin/searchbiz?action=search_biz&query={query}&begin=0&count=3&f=json&ajax=1&{token}'
-    
+
     # 调用搜索接口
     response = requests.get(search_url, cookies=cookie_dict, headers=headers)
     data = response.json()
