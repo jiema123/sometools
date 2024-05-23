@@ -1147,13 +1147,67 @@ button {
     resize: both; /* 可以垂直和水平调整大小 */
 }
 
-@media only screen and (max-width: 600px) {
-    body {
-        font-size: 14px;
+@media only screen and (max-width: 980px) {
+    #editForm,#settingsPanel {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 20px; /* 圆角 */
+        z-index: 999;
+        width: 80%; /* 占屏幕四分之一 */
+        height: 55%;
+    }
+    #settingsButton {
+        height: 100px;
+        width: 100px;
+        background-color: #fff;
+        background-image: url("https://i.postimg.cc/zX6HNjtG/Settings-PNG.png");
+        background-size: cover; /* 背景图片自适应大小 */
+    }
+    body, button, input{
+        font-size: 40px;
+    }
+    button {
+        height: auto;
+    }
+    #editForm input,#addSiteForm input {
+        height: 80px;
+        width: 100%;
+        font-size: 40px;
+        padding-inline-start: 10px;
+        border-radius: 20px; /* 圆角 */
+        box-shadow: none; /* 去除按钮的阴影效果 */
+        border: none; /* 去除按钮的边框 */
+        margin-top: 20px;
+    }
+    #videoUrlInput {
+        width: 80%;
+        height: 80px;
+        font-size: 40px;
+        padding-inline-start: 10px;
+        border-radius: 20px; /* 圆角 */
+        box-shadow: none; /* 去除按钮的阴影效果 */
+        border: none; /* 去除按钮的边框 */
     }
     footer {
         position: static; /* 修正位置 */
         padding: 10px;
+    }
+    #content h1 {
+        font-size: 80px;
+    }
+    .siteItem {
+        height: 320px; /* 设置卡片高度 */
+        border-radius: 30px; /* 添加圆角 */
+        transition: transform 0.3s ease; /* 添加过渡效果 */
+    }
+    #dataTextarea {
+        height: 300px;
+        width:95%;
+        resize: both; /* 可以垂直和水平调整大小 */
     }
     #backgroundImage,
     #videoBackground {
@@ -1162,36 +1216,43 @@ button {
         height: 100%;
         z-index: -1;
     }
-    #editForm,
-    #settingsPanel {
-        position: static; /* 修正位置 */
-        transform: none;
-        width: 100%;
-        height: auto;
-        padding: 10px;
-    }
-    #content {
-        padding: 10px; /* 修正内边距 */
-    }
-    h1 {
-        font-size: 30px;
-    }
+
     #siteList .siteItem {
         width: 100%; /* 每行只放一个卡片 */
         margin: 10px 0; /* 上下间距为10px */
-        height: 160px;
+        height: 320px; /* 设置卡片高度 */
     }
     .siteItem:hover {
         transform: none; /* 恢复默认大小 */
         z-index: auto; /* 恢复默认层级 */
     }
-    #dataTextarea {
-        height: 150px;
+    .siteContent a {
+        height: 258px; /* 设置卡片高度 */
+        line-height: 258px; /* 垂直居中 */
+        font-size: 100px; /* 字体大小为 20px */
+    }
+    .siteContent {
+        height: 280px; /* 设置卡片高度 */
+        padding-bottom: 60%; /* 16:9的高宽比例 9/16*100% = 56.25% */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+
+    .siteDetails .deleteBtn,
+    .siteDetails .title {
+        width: 50%; /* 设置标题和删除按钮各占一半的宽度 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 40px;
     }
 }
 
 
-@media only screen and (min-width: 601px) and (max-width: 1024px) {
+@media only screen and (min-width: 981px) and (max-width: 1024px) {
     /* 进行针对 iPad 设备的样式设置 */
     body {
         font-size: 16px; /* 适当增大字体大小 */
